@@ -5,11 +5,14 @@ CONFIG -= qt
 
 SOURCES += \
         main.cpp \
-    capp.cpp
+    capp.cpp \
+    gameobject.cpp \
+    background.cpp
 
-HEADERS += \
-    log.h \
-    capp.h
+HEADERS += log.h \
+    capp.h \
+    gameobject.h \
+    background.h
 
 # Command
 # -L[Directory path of "lib" folder] -lSDL2
