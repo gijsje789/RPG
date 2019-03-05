@@ -85,12 +85,14 @@ void CApp::CheckEvent(SDL_Event* pEvent)
 
 void CApp::Update()
 {
-
+    mBackGround->Update();
 }
 
 void CApp::Render()
 {
     SDL_RenderClear(mRenderer);
+
+    mBackGround->Render(mRenderer);
 
     SDL_RenderPresent(mRenderer);
 }

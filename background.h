@@ -6,14 +6,15 @@
 class BackGround : public GameObject
 {
 public:
-    BackGround();
+    BackGround(std::string pFile, std::string pExtension);
     ~BackGround();
 
     void Update();
-    void Render();
+    void Render(SDL_Renderer* pRenderer);
     void CleanUp();
 private:
     SDL_Surface* mSpriteSheet = nullptr;
+    SDL_Texture* mBackGroundTex = nullptr;
 };
 
 #endif // BACKGROUND_H

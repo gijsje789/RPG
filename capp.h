@@ -4,6 +4,7 @@
 #include <SDL.h>
 
 #include "log.h"
+#include "background.h"
 
 class CApp
 {
@@ -24,6 +25,8 @@ private:
     SDL_Window* mWindow = nullptr;
     SDL_Renderer* mRenderer = nullptr;
     SDL_Surface* mPrimarySurface = nullptr;
+
+    BackGround* mBackGround = new BackGround("sheet_1616", ".png");
 };
 
 #endif // CAPP_H
