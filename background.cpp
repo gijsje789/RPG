@@ -2,8 +2,7 @@
 
 BackGround::BackGround(std::string pFile, std::string pExtension, SDL_PixelFormat* pPixelFormat)
     : mPixelFormat(pPixelFormat){
-    // TODO: Set up a map using smaller sprites.
-    // TODO: make map of smaller tiles.
+    // TODO: Create nicer map.
     std::string filePath = "../RPG/Resources/" + pFile + pExtension;
     SDL_Surface* spriteSheet = IMG_Load(filePath.c_str());
 
@@ -32,7 +31,7 @@ void BackGround::Update()
 
 void BackGround::Render(SDL_Renderer* pRenderer)
 {
-    // FIXME: clean up
+    // TODO: have texture loaded in class memory.
     mBackGroundTex = SDL_CreateTextureFromSurface(pRenderer, mBackGroundSurf);
     if(mBackGroundTex == nullptr) {
         Log("Unable to create background texture: %s", SDL_GetError());
@@ -43,10 +42,24 @@ void BackGround::Render(SDL_Renderer* pRenderer)
 
 void BackGround::CleanUp()
 {
+    if(mBackGroundSurf) {
+        SDL_FreeSurface(mBackGroundSurf);
+        mBackGroundSurf = nullptr;
+    }
+
     if(mBackGroundTex) {
         SDL_DestroyTexture(mBackGroundTex);
         mBackGroundTex = nullptr;
     }
+
+    for(SDL_Surface* surface : mTiles) {
+        if(surface) {
+            SDL_FreeSurface(surface);
+            surface = nullptr;
+        }
+    }
+    mTiles.clear();
+
 }
 
 bool BackGround::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w, int pTile_h)
@@ -76,6 +89,7 @@ bool BackGround::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w,
     return true;
 }
 
+// TODO: make it more flexible by having the file as parameter.
 bool BackGround::LoadMap()
 {
     std::ifstream myfile;
@@ -104,6 +118,7 @@ bool BackGround::LoadMap()
     return true;
 }
 
+// TODO: make the generation more flexible by having the map and tile sizes as parameters.
 bool BackGround::GenerateMap()
 {
     SDL_Surface* background = SDL_CreateRGBSurface(0, 1024, 768, 32, 0,0,0,0);
