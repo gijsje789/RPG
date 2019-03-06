@@ -17,8 +17,10 @@ public:
 private:
     bool GetTilesFromSpriteSheet(SDL_Surface* pSpriteSheet, int pTile_w, int pTile_h);
     bool LoadMap();
+    bool GenerateMap();
 
     SDL_Texture* mBackGroundTex = nullptr;
+    SDL_Surface* mBackGroundSurf = nullptr;
 
     SDL_PixelFormat* mPixelFormat;
 

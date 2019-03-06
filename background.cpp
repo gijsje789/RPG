@@ -16,6 +16,8 @@ BackGround::BackGround(std::string pFile, std::string pExtension, SDL_PixelForma
     GetTilesFromSpriteSheet(spriteSheet, 16, 16);
 
     LoadMap();
+
+    GenerateMap();
 }
 
 BackGround::~BackGround()
@@ -31,27 +33,12 @@ void BackGround::Update()
 void BackGround::Render(SDL_Renderer* pRenderer)
 {
     // FIXME: clean up
-
-    SDL_Rect rect;
-    rect.w = 16;
-    rect.h = 16;
-    rect.y = 0;
-    rect.x = 0;
-
-    SDL_Texture* tex = SDL_CreateTextureFromSurface(pRenderer, mTiles.at(50));
-    if(tex == nullptr) {
-        Log("Unable to create tile tex: %s", SDL_GetError());
-    } else if(SDL_RenderCopy(pRenderer, tex, nullptr, &rect)) {
-        Log("unable to render background tile: %s.", SDL_GetError());
-    }
-    SDL_DestroyTexture(tex);
-    /*
-    mBackGroundTex = SDL_CreateTextureFromSurface(pRenderer, mSpriteSheet);
+    mBackGroundTex = SDL_CreateTextureFromSurface(pRenderer, mBackGroundSurf);
     if(mBackGroundTex == nullptr) {
         Log("Unable to create background texture: %s", SDL_GetError());
     } else if (SDL_RenderCopy(pRenderer, mBackGroundTex, nullptr, nullptr)) {
         Log("Unable to render background: %s", SDL_GetError());
-    } */
+    }
 }
 
 void BackGround::CleanUp()
@@ -114,5 +101,25 @@ bool BackGround::LoadMap()
         return false;
     }
     Log("Map size: (%d, %d)(w,h).", mMap[0].size(), mMap.size());
+    return true;
+}
+
+bool BackGround::GenerateMap()
+{
+    SDL_Surface* background = SDL_CreateRGBSurface(0, 1024, 768, 32, 0,0,0,0);
+    SDL_Rect rect;
+    rect.w = 16;
+    rect.h = 16;
+    for(int y = 0; y < static_cast<int>(mMap.size()); y++) {
+        for(int x = 0; x < static_cast<int>(mMap.at(y).size()); x++) {
+            rect.x = x*16;
+            rect.y = y*16;
+            if(SDL_BlitSurface(mTiles[mMap.at(y).at(x)], nullptr, background, &rect) != 0) {
+                Log("Error blitting surface to background: %s", SDL_GetError());
+                return false;
+            }
+        }
+    }
+    mBackGroundSurf = background;
     return true;
 }
