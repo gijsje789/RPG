@@ -26,7 +26,7 @@ private:
     SDL_Renderer* mRenderer = nullptr;
     SDL_Surface* mPrimarySurface = nullptr;
 
-    BackGround* mBackGround = new BackGround("sheet_1616", ".png");
+    BackGround* mBackGround = nullptr;
 };
 
 #endif // CAPP_H
