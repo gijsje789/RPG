@@ -3,6 +3,8 @@
 
 #include "gameobject.h"
 
+#include <fstream>
+
 class BackGround : public GameObject
 {
 public:
@@ -14,13 +16,14 @@ public:
     void CleanUp();
 private:
     bool GetTilesFromSpriteSheet(SDL_Surface* pSpriteSheet, int pTile_w, int pTile_h);
+    bool LoadMap();
 
-    SDL_Surface* mSpriteSheet = nullptr;
     SDL_Texture* mBackGroundTex = nullptr;
 
     SDL_PixelFormat* mPixelFormat;
 
     std::vector<SDL_Surface*> mTiles;
+    std::vector<std::vector<int>> mMap;
 };
 
 #endif // BACKGROUND_H

@@ -4,17 +4,18 @@ BackGround::BackGround(std::string pFile, std::string pExtension, SDL_PixelForma
     : mPixelFormat(pPixelFormat){
     // TODO: Set up a map using smaller sprites.
     // TODO: make map of smaller tiles.
-    // TODO: refactor such that spritesheet is not stored in memory.
     std::string filePath = "../RPG/Resources/" + pFile + pExtension;
-    mSpriteSheet = IMG_Load(filePath.c_str());
+    SDL_Surface* spriteSheet = IMG_Load(filePath.c_str());
 
-    if(mSpriteSheet == nullptr) {
+    if(spriteSheet == nullptr) {
         Log("Nullpointer received.");
     }
 
-    Log("Size spritesheet: %d %d", mSpriteSheet->w, mSpriteSheet->h);
+    Log("Size spritesheet: %d %d", spriteSheet->w, spriteSheet->h);
 
-    GetTilesFromSpriteSheet(mSpriteSheet, 16, 16);
+    GetTilesFromSpriteSheet(spriteSheet, 16, 16);
+
+    LoadMap();
 }
 
 BackGround::~BackGround()
@@ -55,11 +56,6 @@ void BackGround::Render(SDL_Renderer* pRenderer)
 
 void BackGround::CleanUp()
 {
-    if(mSpriteSheet) {
-        SDL_FreeSurface(mSpriteSheet);
-        mSpriteSheet = nullptr;
-    }
-
     if(mBackGroundTex) {
         SDL_DestroyTexture(mBackGroundTex);
         mBackGroundTex = nullptr;
@@ -90,5 +86,33 @@ bool BackGround::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w,
         Log("Background spritesheet is incompatible with tile dimensions (%d,%d)(w,h).", pTile_w, pTile_h);
         return false;
     }
+    return true;
+}
+
+bool BackGround::LoadMap()
+{
+    std::ifstream myfile;
+    myfile.open("../RPG/Resources/background.csv");
+    std::string line;
+
+    if(myfile.is_open()) {
+        while(std::getline(myfile, line) && !myfile.eof()) {
+            std::vector<int> temp;
+            std::string buffer = "";
+            for(char &chr : line) {
+                if(chr == ',') {
+                    temp.push_back(static_cast<int>(std::stoi(buffer)));
+                    buffer.clear();
+                } else {
+                    buffer += chr;
+                }
+            }
+            mMap.push_back(temp);
+        }
+    } else {
+        Log("Unable to open background file.");
+        return false;
+    }
+    Log("Map size: (%d, %d)(w,h).", mMap[0].size(), mMap.size());
     return true;
 }
