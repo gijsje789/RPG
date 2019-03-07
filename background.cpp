@@ -13,10 +13,9 @@ BackGround::BackGround(std::string pFile, std::string pExtension, SDL_PixelForma
         Log("Nullpointer received.");
     }
 
-    Log("Size spritesheet: %d %d", spriteSheet->w, spriteSheet->h);
+    Log("Size spritesheet: %d %d", static_cast<int>(spriteSheet->w), static_cast<int>(spriteSheet->h));
 
-    // FIXME: no magic numbers for tile sizes.
-    GetTilesFromSpriteSheet(spriteSheet, 16, 16);
+    GetTilesFromSpriteSheet(spriteSheet, std::stoi(pFile.substr(pFile.find('_')+1, 2)), std::stoi(pFile.substr(pFile.find('_')+3, 2)));
 
     LoadMap("background", ".csv");
 
@@ -78,7 +77,7 @@ bool BackGround::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w,
             for(int x = 0; x < pSpriteSheet->w / pTile_w; x++) {
                 srcRect.x = x*pTile_w;
                 srcRect.y = y*pTile_h;
-                SDL_Surface* tempSurface = SDL_CreateRGBSurface(0, 16, 16, 32, 0, 0, 0, 0);
+                SDL_Surface* tempSurface = SDL_CreateRGBSurface(0, pTile_w, pTile_h, 32, 0, 0, 0, 0);
 
                 if(SDL_BlitSurface(pSpriteSheet, &srcRect, tempSurface, nullptr)==0) {
                     mTiles.push_back(tempSurface);
@@ -88,13 +87,14 @@ bool BackGround::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w,
                 }
             }
         }
+        Log("Number of tiles: %d", static_cast<int>(mTiles.size()));
     } else {
         Log("Background spritesheet is incompatible with tile dimensions (%d,%d)(w,h).", pTile_w, pTile_h);
         return false;
     }
     return true;
 }
-// FIXME: no magic numbers for tile sizes.
+
 bool BackGround::LoadMap(std::string pFile, std::string pExtension)
 {
     std::ifstream myfile;
@@ -120,23 +120,23 @@ bool BackGround::LoadMap(std::string pFile, std::string pExtension)
         Log("Unable to open background file.");
         return false;
     }
+    mDstTile_W = (static_cast<int>(CApp::Window_W())/static_cast<int>(mMap[0].size()));
+    mDstTile_H = static_cast<int>(static_cast<int>(CApp::Window_H())/static_cast<int>(mMap.size()));
     Log("Map size: (%d, %d)(w,h).", static_cast<int>(mMap[0].size()), static_cast<int>(mMap.size()));
     return true;
 }
 
-// FIXME: window is not completely filled. Tiled map problem?
-// FIXME: no magic numbers of rect sizes.
-bool BackGround::GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* destination)
+bool BackGround::GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* pDestination)
 {
     SDL_Rect rect;
-    rect.w = 16;
-    rect.h = 16;
+    rect.w = mDstTile_W;
+    rect.h = mDstTile_H;
     for(int y = 0; y < static_cast<int>(pMap.size()); y++) {
         for(int x = 0; x < static_cast<int>(pMap.at(static_cast<unsigned long>(y)).size()); x++) {
-            rect.x = x*16;
-            rect.y = y*16;
-            if(SDL_BlitSurface(pTiles[static_cast<unsigned long>(pMap.at(static_cast<unsigned long>(y)).at(static_cast<unsigned long>(x)))],
-                               nullptr, destination, &rect) != 0) {
+            rect.x = x*mDstTile_W;
+            rect.y = y*mDstTile_H;
+            if(SDL_BlitScaled(pTiles[static_cast<unsigned long>(pMap.at(static_cast<unsigned long>(y)).at(static_cast<unsigned long>(x)))],
+                               nullptr, pDestination, &rect) != 0) {
                 Log("Error blitting surface to background: %s", SDL_GetError());
                 return false;
             }

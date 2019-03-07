@@ -17,7 +17,7 @@ public:
 private:
     bool GetTilesFromSpriteSheet(SDL_Surface* pSpriteSheet, int pTile_w, int pTile_h);
     bool LoadMap(std::string pFile, std::string pExtension);
-    bool GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* destination);
+    bool GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* pDestination);
 
     SDL_Texture* mBackGroundTex = nullptr;
 
@@ -26,6 +26,9 @@ private:
 
     std::vector<SDL_Surface*> mTiles;
     std::vector<std::vector<int>> mMap;
+
+    int mDstTile_W = -1;
+    int mDstTile_H = -1;
 };
 
 #endif // BACKGROUND_H
