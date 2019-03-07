@@ -35,8 +35,9 @@ void BackGround::Update()
 
 void BackGround::Render(SDL_Renderer* pRenderer)
 {
-    // TODO: have texture loaded in class memory.
+    if(mBackGroundTex) SDL_DestroyTexture(mBackGroundTex);
     mBackGroundTex = SDL_CreateTextureFromSurface(pRenderer, mBackGroundSurf);
+
     if(mBackGroundTex == nullptr) {
         Log("Unable to create background texture: %s", SDL_GetError());
     } else if (SDL_RenderCopy(pRenderer, mBackGroundTex, nullptr, nullptr)) {
@@ -121,6 +122,7 @@ bool BackGround::LoadMap(std::string pFile, std::string pExtension)
     return true;
 }
 
+// FIXME: window is not completely filled. Tiled map problem?
 bool BackGround::GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* destination)
 {
     SDL_Rect rect;

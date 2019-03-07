@@ -10,7 +10,7 @@ int CApp::Execute()
     if(!Init()) return -1;
 
     SDL_Event Event;
-
+    // TODO: cap frame rate.
     while(mRunning) {
 
         while(SDL_PollEvent(&Event)) {
