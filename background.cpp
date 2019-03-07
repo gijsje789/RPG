@@ -16,7 +16,9 @@ BackGround::BackGround(std::string pFile, std::string pExtension, SDL_PixelForma
 
     LoadMap("background", ".csv");
 
-    GenerateMap();
+    // TODO: have the window sizes as variables.
+    mBackGroundSurf = SDL_CreateRGBSurface(0, 1024, 768, 32, 0,0,0,0);
+    GenerateMap(mMap, mTiles, mBackGroundSurf);
 }
 
 BackGround::~BackGround()
@@ -119,23 +121,21 @@ bool BackGround::LoadMap(std::string pFile, std::string pExtension)
 }
 
 // TODO: make the generation more flexible by having the map and tile sizes as parameters.
-bool BackGround::GenerateMap()
+bool BackGround::GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* destination)
 {
-    SDL_Surface* background = SDL_CreateRGBSurface(0, 1024, 768, 32, 0,0,0,0);
     SDL_Rect rect;
     rect.w = 16;
     rect.h = 16;
-    for(int y = 0; y < static_cast<int>(mMap.size()); y++) {
-        for(int x = 0; x < static_cast<int>(mMap.at(static_cast<unsigned long>(y)).size()); x++) {
+    for(int y = 0; y < static_cast<int>(pMap.size()); y++) {
+        for(int x = 0; x < static_cast<int>(pMap.at(static_cast<unsigned long>(y)).size()); x++) {
             rect.x = x*16;
             rect.y = y*16;
-            if(SDL_BlitSurface(mTiles[static_cast<unsigned long>(mMap.at(static_cast<unsigned long>(y)).at(static_cast<unsigned long>(x)))],
-                               nullptr, background, &rect) != 0) {
+            if(SDL_BlitSurface(pTiles[static_cast<unsigned long>(pMap.at(static_cast<unsigned long>(y)).at(static_cast<unsigned long>(x)))],
+                               nullptr, destination, &rect) != 0) {
                 Log("Error blitting surface to background: %s", SDL_GetError());
                 return false;
             }
         }
     }
-    mBackGroundSurf = background;
     return true;
 }
