@@ -15,6 +15,7 @@ BackGround::BackGround(std::string pFile, std::string pExtension, SDL_PixelForma
 
     Log("Size spritesheet: %d %d", spriteSheet->w, spriteSheet->h);
 
+    // FIXME: no magic numbers for tile sizes.
     GetTilesFromSpriteSheet(spriteSheet, 16, 16);
 
     LoadMap("background", ".csv");
@@ -93,7 +94,7 @@ bool BackGround::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w,
     }
     return true;
 }
-
+// FIXME: no magic numbers for tile sizes.
 bool BackGround::LoadMap(std::string pFile, std::string pExtension)
 {
     std::ifstream myfile;
@@ -112,6 +113,7 @@ bool BackGround::LoadMap(std::string pFile, std::string pExtension)
                     buffer += chr;
                 }
             }
+            if(!buffer.empty()) temp.push_back(static_cast<int>(std::stoi(buffer)));
             mMap.push_back(temp);
         }
     } else {
@@ -123,6 +125,7 @@ bool BackGround::LoadMap(std::string pFile, std::string pExtension)
 }
 
 // FIXME: window is not completely filled. Tiled map problem?
+// FIXME: no magic numbers of rect sizes.
 bool BackGround::GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* destination)
 {
     SDL_Rect rect;
