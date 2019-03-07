@@ -113,3 +113,13 @@ void CApp::CleanUp()
 
     SDL_Quit();
 }
+
+int CApp::Window_W()
+{
+    return WINDOW_W;
+}
+
+int CApp::Window_H()
+{
+    return WINDOW_H;
+}

@@ -6,9 +6,13 @@
 
 #include <SDL.h>
 #include <SDL_image.h>
+
 #include "log.h"
 
 #define RESOURCE_FOLDER "../RPG/Resources/"
+
+// Forward declaration such that static functions can be retrieved from CApp.
+class CApp;
 
 class GameObject
 {

@@ -17,6 +17,8 @@ public:
     void Update();
     void Render();
     void CleanUp();
+    static int Window_W();
+    static int Window_H();
 private:
     bool mRunning = false;
     static const int WINDOW_W = 1024;

@@ -1,5 +1,8 @@
 #include "background.h"
 
+// Including the header here to access the CApp::Window_W() and CApp::Window_H().
+#include "capp.h"
+
 BackGround::BackGround(std::string pFile, std::string pExtension, SDL_PixelFormat* pPixelFormat)
     : mPixelFormat(pPixelFormat){
     // TODO: Create nicer map.
@@ -16,8 +19,7 @@ BackGround::BackGround(std::string pFile, std::string pExtension, SDL_PixelForma
 
     LoadMap("background", ".csv");
 
-    // TODO: have the window sizes as variables.
-    mBackGroundSurf = SDL_CreateRGBSurface(0, 1024, 768, 32, 0,0,0,0);
+    mBackGroundSurf = SDL_CreateRGBSurface(0, CApp::Window_W(), CApp::Window_H(), 32, 0,0,0,0);
     GenerateMap(mMap, mTiles, mBackGroundSurf);
 }
 
@@ -91,7 +93,6 @@ bool BackGround::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w,
     return true;
 }
 
-// TODO: make it more flexible by having the file as parameter.
 bool BackGround::LoadMap(std::string pFile, std::string pExtension)
 {
     std::ifstream myfile;
@@ -120,7 +121,6 @@ bool BackGround::LoadMap(std::string pFile, std::string pExtension)
     return true;
 }
 
-// TODO: make the generation more flexible by having the map and tile sizes as parameters.
 bool BackGround::GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* destination)
 {
     SDL_Rect rect;
