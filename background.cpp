@@ -14,7 +14,7 @@ BackGround::BackGround(std::string pFile, std::string pExtension, SDL_PixelForma
 
     GetTilesFromSpriteSheet(spriteSheet, 16, 16);
 
-    LoadMap();
+    LoadMap("background", ".csv");
 
     GenerateMap();
 }
@@ -90,10 +90,10 @@ bool BackGround::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w,
 }
 
 // TODO: make it more flexible by having the file as parameter.
-bool BackGround::LoadMap()
+bool BackGround::LoadMap(std::string pFile, std::string pExtension)
 {
     std::ifstream myfile;
-    myfile.open("../RPG/Resources/background.csv");
+    myfile.open(RESOURCE_FOLDER + pFile + pExtension);
     std::string line;
 
     if(myfile.is_open()) {
@@ -114,7 +114,7 @@ bool BackGround::LoadMap()
         Log("Unable to open background file.");
         return false;
     }
-    Log("Map size: (%d, %d)(w,h).", mMap[0].size(), mMap.size());
+    Log("Map size: (%d, %d)(w,h).", static_cast<int>(mMap[0].size()), static_cast<int>(mMap.size()));
     return true;
 }
 
@@ -126,10 +126,11 @@ bool BackGround::GenerateMap()
     rect.w = 16;
     rect.h = 16;
     for(int y = 0; y < static_cast<int>(mMap.size()); y++) {
-        for(int x = 0; x < static_cast<int>(mMap.at(y).size()); x++) {
+        for(int x = 0; x < static_cast<int>(mMap.at(static_cast<unsigned long>(y)).size()); x++) {
             rect.x = x*16;
             rect.y = y*16;
-            if(SDL_BlitSurface(mTiles[mMap.at(y).at(x)], nullptr, background, &rect) != 0) {
+            if(SDL_BlitSurface(mTiles[static_cast<unsigned long>(mMap.at(static_cast<unsigned long>(y)).at(static_cast<unsigned long>(x)))],
+                               nullptr, background, &rect) != 0) {
                 Log("Error blitting surface to background: %s", SDL_GetError());
                 return false;
             }

@@ -8,6 +8,8 @@
 #include <SDL_image.h>
 #include "log.h"
 
+#define RESOURCE_FOLDER "../RPG/Resources/"
+
 class GameObject
 {
 public:

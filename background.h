@@ -16,7 +16,7 @@ public:
     void CleanUp();
 private:
     bool GetTilesFromSpriteSheet(SDL_Surface* pSpriteSheet, int pTile_w, int pTile_h);
-    bool LoadMap();
+    bool LoadMap(std::string pFile, std::string pExtension);
     bool GenerateMap();
 
     SDL_Texture* mBackGroundTex = nullptr;
