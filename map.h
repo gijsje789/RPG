@@ -10,10 +10,10 @@ class CApp;
 class Map : public GameObject
 {
 public:
-    Map(std::string pFile, std::string pExtension);
+    Map(std::string pSpriteSheet, std::string pMap);
 protected:
     bool GetTilesFromSpriteSheet(SDL_Surface* pSpriteSheet, int pTile_w, int pTile_h);
-    bool LoadMap(std::string pFile, std::string pExtension);
+    bool LoadMap(std::string pFile);
     bool GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* pDestination);
 
     SDL_Surface* mSurface = nullptr;

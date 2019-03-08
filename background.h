@@ -6,7 +6,7 @@
 class BackGround : public Map
 {
 public:
-    BackGround(std::string pFile, std::string pExtension);
+    BackGround(std::string pSpriteSheet, std::string pMap);
     ~BackGround();
 
     void Update();

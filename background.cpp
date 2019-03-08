@@ -1,7 +1,7 @@
 #include "background.h"
 
-BackGround::BackGround(std::string pFile, std::string pExtension) :
-    Map(pFile, pExtension)
+BackGround::BackGround(std::string pSpriteSheet, std::string pMap) :
+    Map(pSpriteSheet, pMap)
 {
 
 }

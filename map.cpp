@@ -2,10 +2,10 @@
 
 #include "capp.h"
 
-Map::Map(std::string pFile, std::string pExtension)
+Map::Map(std::string pSpriteSheet, std::string pMap)
 {
     // TODO: Create nicer map.
-    std::string filePath = RESOURCE_FOLDER + pFile + pExtension;
+    std::string filePath = RESOURCE_FOLDER + pSpriteSheet;
     SDL_Surface* spriteSheet = IMG_Load(filePath.c_str());
 
     if(spriteSheet == nullptr) {
@@ -14,9 +14,9 @@ Map::Map(std::string pFile, std::string pExtension)
 
     Log("Size spritesheet: %d %d", static_cast<int>(spriteSheet->w), static_cast<int>(spriteSheet->h));
 
-    GetTilesFromSpriteSheet(spriteSheet, std::stoi(pFile.substr(pFile.find('_')+1, 2)), std::stoi(pFile.substr(pFile.find('_')+3, 2)));
+    GetTilesFromSpriteSheet(spriteSheet, std::stoi(pSpriteSheet.substr(pSpriteSheet.find('_')+1, 2)), std::stoi(pSpriteSheet.substr(pSpriteSheet.find('_')+3, 2)));
     // TODO: get csv name from function call
-    LoadMap("background", ".csv");
+    LoadMap(pMap);
 
     mSurface = SDL_CreateRGBSurface(0, CApp::Window_W(), CApp::Window_H(), 32, 0,0,0,0);
     GenerateMap(mMap, mTiles, mSurface);
@@ -50,10 +50,10 @@ bool Map::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w, int pT
     return true;
 }
 
-bool Map::LoadMap(std::string pFile, std::string pExtension)
+bool Map::LoadMap(std::string pFile)
 {
     std::ifstream myfile;
-    myfile.open(RESOURCE_FOLDER + pFile + pExtension);
+    myfile.open(RESOURCE_FOLDER + pFile);
     std::string line;
 
     if(myfile.is_open()) {
