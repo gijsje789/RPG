@@ -1,34 +1,21 @@
 #ifndef BACKGROUND_H
 #define BACKGROUND_H
 
-#include "gameobject.h"
+#include "map.h"
 
-#include <fstream>
-
-class BackGround : public GameObject
+class BackGround : public Map
 {
 public:
-    BackGround(std::string pFile, std::string pExtension, SDL_PixelFormat* pPixelFormat);
+    BackGround(std::string pFile, std::string pExtension);
     ~BackGround();
 
     void Update();
     void Render(SDL_Renderer* pRenderer);
     void CleanUp();
-private:
-    bool GetTilesFromSpriteSheet(SDL_Surface* pSpriteSheet, int pTile_w, int pTile_h);
-    bool LoadMap(std::string pFile, std::string pExtension);
-    bool GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* pDestination);
-
-    SDL_Texture* mBackGroundTex = nullptr;
-
-    SDL_Surface* mBackGroundSurf = nullptr;
-    SDL_PixelFormat* mPixelFormat;
-
-    std::vector<SDL_Surface*> mTiles;
-    std::vector<std::vector<int>> mMap;
-
-    int mDstTile_W = -1;
-    int mDstTile_H = -1;
+protected:
+    //bool GetTilesFromSpriteSheet(SDL_Surface* pSpriteSheet, int pTile_w, int pTile_h);
+    //bool LoadMap(std::string pFile, std::string pExtension);
+    //bool GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surface*> &pTiles, SDL_Surface* pDestination);
 };
 
 #endif // BACKGROUND_H

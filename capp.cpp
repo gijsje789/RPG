@@ -52,7 +52,7 @@ bool CApp::Init()
 
     SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 0xFF);
 
-    mBackGround = new BackGround("sheet_1616", ".png", mPrimarySurface->format);
+    mBackGround = new BackGround("sheet_1616", ".png");
 
     mRunning = true;
     return true;
