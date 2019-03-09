@@ -7,7 +7,7 @@ Map::Map(std::string pSpriteSheet, std::string pMap)
     // TODO: Create nicer map.
     std::string filePath = RESOURCE_FOLDER + pSpriteSheet;
     SDL_Surface* spriteSheet = IMG_Load(filePath.c_str());
-
+    Log("%s", SDL_GetPixelFormatName(spriteSheet->format->format));
     if(spriteSheet == nullptr) {
         Log("Nullpointer received.");
     }
@@ -18,8 +18,35 @@ Map::Map(std::string pSpriteSheet, std::string pMap)
     // TODO: get csv name from function call
     LoadMap(pMap);
 
-    mSurface = SDL_CreateRGBSurface(0, CApp::Window_W(), CApp::Window_H(), 32, 0,0,0,0);
+    mSurface = SDL_CreateRGBSurface(0, CApp::Window_W(), CApp::Window_H(), 32, 0xff, 0xff00, 0xff0000, 0xff000000);
+
     GenerateMap(mMap, mTiles, mSurface);
+}
+
+Map::~Map()
+{
+
+}
+
+void Map::CleanUp()
+{
+    if(mSurface) {
+        SDL_FreeSurface(mSurface);
+        mSurface = nullptr;
+    }
+
+    if(mTexture) {
+        SDL_DestroyTexture(mTexture);
+        mTexture = nullptr;
+    }
+
+    for(SDL_Surface* surface : mTiles) {
+        if(surface) {
+            SDL_FreeSurface(surface);
+            surface = nullptr;
+        }
+    }
+    mTiles.clear();
 }
 
 bool Map::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w, int pTile_h)
@@ -32,8 +59,7 @@ bool Map::GetTilesFromSpriteSheet(SDL_Surface *pSpriteSheet, int pTile_w, int pT
             for(int x = 0; x < pSpriteSheet->w / pTile_w; x++) {
                 srcRect.x = x*pTile_w;
                 srcRect.y = y*pTile_h;
-                SDL_Surface* tempSurface = SDL_CreateRGBSurface(0, pTile_w, pTile_h, 32, 0, 0, 0, 0);
-
+                SDL_Surface* tempSurface = SDL_CreateRGBSurface(0, pTile_w, pTile_h, 32, 0xff, 0xff00, 0xff0000, 0xff000000);
                 if(SDL_BlitSurface(pSpriteSheet, &srcRect, tempSurface, nullptr)==0) {
                     mTiles.push_back(tempSurface);
                 } else {
@@ -86,16 +112,24 @@ bool Map::GenerateMap(std::vector<std::vector<int>> &pMap, std::vector<SDL_Surfa
     SDL_Rect rect;
     rect.w = mDstTile_W;
     rect.h = mDstTile_H;
+    SDL_Surface* transparent = SDL_CreateRGBSurface(0, mDstTile_W, mDstTile_H, 32, 0xff, 0xff00, 0xff0000, 0xff000000);
+
     for(int y = 0; y < static_cast<int>(pMap.size()); y++) {
         for(int x = 0; x < static_cast<int>(pMap.at(static_cast<unsigned long>(y)).size()); x++) {
             rect.x = x*mDstTile_W;
             rect.y = y*mDstTile_H;
-            if(SDL_BlitScaled(pTiles[static_cast<unsigned long>(pMap.at(static_cast<unsigned long>(y)).at(static_cast<unsigned long>(x)))],
-                               nullptr, pDestination, &rect) != 0) {
-                Log("Error blitting surface to background: %s", SDL_GetError());
+            int index = static_cast<int>(pMap.at(static_cast<unsigned long>(y)).at(static_cast<unsigned long>(x)));
+            if(index < 0) {
+                if(SDL_BlitScaled(transparent, nullptr, pDestination, &rect) != 0) {
+                    Log("Error blitting transparent surface to destination: %s", SDL_GetError());
+                }
+            } else if(SDL_BlitScaled(pTiles[static_cast<unsigned long>(index)],
+                              nullptr, pDestination, &rect) != 0) {
+                Log("Error blitting surface to destination: %s", SDL_GetError());
                 return false;
             }
         }
     }
+    SDL_FreeSurface(transparent);
     return true;
 }

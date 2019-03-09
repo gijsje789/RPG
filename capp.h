@@ -5,6 +5,7 @@
 
 #include "log.h"
 #include "background.h"
+#include "foreground.h"
 
 class CApp
 {
@@ -29,6 +30,7 @@ private:
     SDL_Surface* mPrimarySurface = nullptr;
 
     BackGround* mBackGround = nullptr;
+    ForeGround* mForeGround = nullptr;
 };
 
 #endif // CAPP_H

@@ -8,13 +8,15 @@ SOURCES += \
     capp.cpp \
     gameobject.cpp \
     background.cpp \
-    map.cpp
+    map.cpp \
+    foreground.cpp
 
 HEADERS += log.h \
     capp.h \
     gameobject.h \
     background.h \
-    map.h
+    map.h \
+    foreground.h
 
 # Command
 # -L[Directory path of "lib" folder] -lSDL2

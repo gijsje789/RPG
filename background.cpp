@@ -30,24 +30,7 @@ void BackGround::Render(SDL_Renderer* pRenderer)
 
 void BackGround::CleanUp()
 {
-    if(mSurface) {
-        SDL_FreeSurface(mSurface);
-        mSurface = nullptr;
-    }
-
-    if(mTexture) {
-        SDL_DestroyTexture(mTexture);
-        mTexture = nullptr;
-    }
-
-    for(SDL_Surface* surface : mTiles) {
-        if(surface) {
-            SDL_FreeSurface(surface);
-            surface = nullptr;
-        }
-    }
-    mTiles.clear();
-
+    Map::CleanUp();
 }
 
 

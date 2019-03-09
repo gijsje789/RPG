@@ -50,9 +50,10 @@ bool CApp::Init()
         return false;
     }
 
-    SDL_SetRenderDrawColor(mRenderer, 0x00, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(mRenderer, 0xFF, 0x00, 0x00, 0x00);
 
     mBackGround = new BackGround("sheet_1616.png", "background.csv");
+    mForeGround = new ForeGround("sheet_1616.png", "foreground.csv");
 
     mRunning = true;
     return true;
@@ -88,6 +89,7 @@ void CApp::CheckEvent(SDL_Event* pEvent)
 void CApp::Update()
 {
     mBackGround->Update();
+    mForeGround->Update();
 }
 
 void CApp::Render()
@@ -95,6 +97,7 @@ void CApp::Render()
     SDL_RenderClear(mRenderer);
 
     mBackGround->Render(mRenderer);
+    mForeGround->Render(mRenderer);
 
     SDL_RenderPresent(mRenderer);
 }
@@ -110,6 +113,9 @@ void CApp::CleanUp()
         SDL_DestroyWindow(mWindow);
         mWindow = nullptr;
     }
+
+    mBackGround->CleanUp();
+    mForeGround->CleanUp();
 
     SDL_Quit();
 }

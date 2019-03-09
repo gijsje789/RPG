@@ -11,6 +11,8 @@ class Map : public GameObject
 {
 public:
     Map(std::string pSpriteSheet, std::string pMap);
+    ~Map();
+    void CleanUp();
 protected:
     bool GetTilesFromSpriteSheet(SDL_Surface* pSpriteSheet, int pTile_w, int pTile_h);
     bool LoadMap(std::string pFile);
